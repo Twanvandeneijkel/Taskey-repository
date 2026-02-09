@@ -1,0 +1,21 @@
+<?php
+
+namespace Framework;
+
+class Request
+{
+    public string $method;
+    public string $path;
+    /* @var string[] */
+    public array $queryParameters;
+    /* @var string[] */
+    public array $postParameters;
+
+    public function __construct(string $method, string $path, array $queryParameters, array $postParameters)
+    {
+        $this->method = $method;
+        $this->path = $path;
+        $this->queryParameters = $queryParameters;
+        $this->postParameters = $postParameters;
+    }
+}
