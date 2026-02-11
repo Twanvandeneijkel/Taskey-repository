@@ -2,19 +2,25 @@
 
 namespace App\Controllers;
 
+use App\ResponseFactory;
 use Framework\Response;
 
 class TaskController
 {
-    public function index(): Response {
-        $response = new Response();
-        $response->body = "Task Page";
-        return $response;
-    }
+  private ResponseFactory $responseFactory;
 
-    public function create(): Response {
-        $response = new Response();
-        $response->body = "Task create Page";
-        return $response;
-    }
+  public function __construct($responseFactory)
+  {
+    $this->responseFactory = $responseFactory;
+  }
+
+  public function index(): Response
+  {
+    return $this->responseFactory->body("Task Page");
+  }
+
+  public function create(): Response
+  {
+    return $this->responseFactory->body("Task Create Page");
+  }
 }

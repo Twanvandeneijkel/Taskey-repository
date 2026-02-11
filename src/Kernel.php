@@ -2,26 +2,51 @@
 
 namespace Framework;
 
+use App\ResponseFactory;
+use App\ServiceProvider;
+use Exception;
+
 class Kernel
 {
-    private Router $router;
+  private Router $router;
 
-    public function __construct()
-    {
-        $this->router = new Router();
-    }
+  private ServiceContainer $serviceContainer;
 
-    public function getRouter(): Router
-    {
-        return $this->router;
-    }
+  /**
+   * @throws Exception
+   */
+  public function __construct()
+  {
+    $this->serviceContainer = new ServiceContainer();
 
-    public function registerRoutes(RouteProviderInterface $routeProvider): void {
-        $routeProvider->register($this->router);
-    }
+    $responseFactory = new ResponseFactory();
+    $this->serviceContainer->set(ResponseFactory::class, $responseFactory);
 
-    public function handle(Request $request): Response
-    {
-        return $this->router->dispatch($request);
-    }
+    $this->router = new Router($responseFactory);
+  }
+
+  public function getRouter(): Router
+  {
+    return $this->router;
+  }
+
+  /**
+   * @param ServiceProvider $serviceProvider
+   * @return void
+   * @throws Exception
+   */
+  public function registerServices(ServiceProvider $serviceProvider): void
+  {
+    $serviceProvider->register($this->serviceContainer);
+  }
+
+  public function registerRoutes(RouteProviderInterface $routeProvider): void
+  {
+    $routeProvider->register($this->router, $this->serviceContainer);
+  }
+
+  public function handle(Request $request): Response
+  {
+    return $this->router->dispatch($request);
+  }
 }
