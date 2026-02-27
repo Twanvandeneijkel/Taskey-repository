@@ -7,11 +7,24 @@ use App\ServiceProvider;
 use Framework\Kernel;
 use Framework\Request;
 
-$kernel = new Kernel();
+
 $routeProvider = new RouteProvider();
 $serviceProvider = new ServiceProvider();
 
-$kernel->registerServices($serviceProvider);
+$config = ["APP_ENV" => "development", "VIEWS_PATH" => "..\app\Views", "APP_DB" => "database.sqlite"];
+
+try {
+    $kernel = new Kernel($config);
+} catch (Exception $e) {
+
+}
+
+
+try {
+    $kernel->registerServices($serviceProvider);
+} catch (Exception $e) {
+
+}
 
 $kernel->registerRoutes($routeProvider);
 
@@ -21,12 +34,7 @@ if (!is_string($urlPath)) {
     $urlPath = '/';
 }
 
-$request = new Request(
-    $_SERVER['REQUEST_METHOD'],
-    $urlPath,
-    $_GET,
-    $_POST
-);
+$request = new Request($_SERVER['REQUEST_METHOD'], $urlPath, $_GET, $_POST);
 
 $response = $kernel->handle($request);
 

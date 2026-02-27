@@ -2,7 +2,9 @@
 
 namespace Framework;
 
-use App\ResponseFactory;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Error\SyntaxError;
 
 class Router
 {
@@ -15,6 +17,11 @@ class Router
     $this->responseFactory = $responseFactory;
   }
 
+  /**
+   * @throws SyntaxError
+   * @throws RuntimeError
+   * @throws LoaderError
+   */
   public function dispatch(Request $request): Response
   {
     // Checks if Request matches with existing route.
@@ -22,7 +29,8 @@ class Router
     foreach ($this->routes as $route) {
       if ($route->matches($request->method, $request->path)) {
         $callback = $route->callable;
-        return $callback();
+        $request->routeParameters = $route->routeParameters;
+        return $callback($request);
       }
     }
     return $this->responseFactory->notFound();

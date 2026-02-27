@@ -2,8 +2,8 @@
 
 namespace App\Controllers;
 
-use App\ResponseFactory;
 use Framework\Response;
+use Framework\ResponseFactory;
 
 class HomeController
 {
@@ -14,11 +14,11 @@ class HomeController
   }
   public function index(): Response
   {
-    return $this->responseFactory->body("Home Page");
+    return $this->responseFactory->view("index.html.twig");
   }
 
   public function about(): Response
   {
-    return $this->responseFactory->body("About Page");
+    return $this->responseFactory->view("about.html.twig");
   }
 }

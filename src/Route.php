@@ -10,6 +10,9 @@ class Route
     /* @var callable */
     public $callable;
 
+    /* @var string[] */
+    public array $routeParameters;
+
     public function __construct(string $method, string $path, callable $callback)
     {
         // GET, POST Request.
@@ -23,11 +26,12 @@ class Route
 
     public function matches(string $method, string $path): bool
     {
-        // Checks if method exists.
-        if ($method !== $this->method) {
-            return false;
+        if (preg_match(';^' . $this->path . '/?$;', $path, $matches))
+        {
+            $this->routeParameters = $matches;
+            return true;
         }
 
-        return $path === $this->path;
+        return ($method === $this->method and $path === $this->path);
     }
 }

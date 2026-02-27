@@ -15,3 +15,32 @@ if ($argv[1] === 'phpcs') {
 if ($argv[1] === 'deptrac') {
     passthru('php vendor/bin/deptrac --ansi');
 }
+
+if ($argv[1] === 'migrate') {
+    require 'vendor/autoload.php';
+
+    $config = array(
+        'APP_ENV' => 'development',
+        'VIEWS_PATH' => 'app/views',
+        'APP_DB' => 'database.sqlite'
+        );
+
+     $kernel = new \Framework\Kernel($config);
+     $kernel->getDatabase()->migrate(__DIR__ . '/database');
+}
+
+if ($argv[1] ==='serve-migrate') {
+    require 'vendor/autoload.php';
+
+    $config = array(
+        'APP_ENV' => 'development',
+        'VIEWS_PATH' => 'app/views',
+        'APP_DB' => 'database.sqlite'
+        );
+
+     $kernel = new \Framework\Kernel($config);
+     $kernel->getDatabase()->migrate(__DIR__ . '/database');
+
+    exec('php -S localhost:8888 -t public');
+
+}

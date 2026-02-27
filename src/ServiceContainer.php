@@ -17,7 +17,7 @@ class ServiceContainer
    */
     public function set(string $id, object $object): void
     {
-        if (isset($this->intstances[$id])) {
+        if (!isset($id)) {
           throw new Exception("The given [$id] already exists!");
         }
         $this->instances[$id] = $object;
